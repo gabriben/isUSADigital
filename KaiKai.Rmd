@@ -1,0 +1,70 @@
+---
+title: "KaiKai"
+author: "Gabriel"
+date: "3/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(haven)
+library(ggplot2)
+library(data.table)
+library(magrittr)
+library(plotly)
+```
+
+## Industry VS Asset over years
+
+```{r cars}
+d <- read_dta("industries_laborshare_automation.dta")
+d <- setDT(d)
+
+codes <- read.csv("industryCodes.csv", header = T, sep = ";")
+setnames(codes, "INDUSTRY.TITLE", "Industry")
+```
+
+
+```{r}
+d <- d[codes, on = "industry"]
+```
+
+```{r}
+d
+```
+
+```{r}
+
+```
+
+
+## first plot
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+industry
+
+d[industry == 5610 & year == 1959, .SD[Cap_share %in% tail(sort(Cap_share), 5)]]
+
+d[industry == 5610 & year == 2017, .SD[Cap_share %in% tail(sort(Cap_share), 5)]]
+
+d[, .(change = unique(.SD[year == 1987, laborshare] / .SD[year == 2017, laborshare])), by = Industry] %>%
+  .[order(change)]
+
+d[industry == 5610] %>% ggplot(aes(year, Cap_share)) + geom_smooth() + facet_wrap(~asset_name)
+```
+
+```{r pressure, echo=FALSE}
+
+
+(ggplot(d, aes(year, laborshare)) + 
+  geom_smooth(aes(color = Industry)) + 
+  geom_smooth()) %>% # + facet_wrap(~industry))
+  ggplotly()
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
