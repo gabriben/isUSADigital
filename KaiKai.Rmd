@@ -29,22 +29,12 @@ setnames(codes, "INDUSTRY.TITLE", "Industry")
 d <- d[codes, on = "industry"]
 ```
 
-```{r}
-d
-```
-
-```{r}
-
-```
-
 
 ## first plot
 
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-
-industry
 
 d[industry == 5610 & year == 1959, .SD[Cap_share %in% tail(sort(Cap_share), 5)]]
 
@@ -53,8 +43,14 @@ d[industry == 5610 & year == 2017, .SD[Cap_share %in% tail(sort(Cap_share), 5)]]
 d[, .(change = unique(.SD[year == 1987, laborshare] / .SD[year == 2017, laborshare])), by = Industry] %>%
   .[order(change)]
 
+write.csv(d, "BEA.csv")
+
+```
+
+```{r}
 d[industry == 5610] %>% ggplot(aes(year, Cap_share)) + geom_smooth() + facet_wrap(~asset_name)
 ```
+
 
 ```{r pressure, echo=FALSE}
 
